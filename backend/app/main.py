@@ -21,16 +21,11 @@ app = FastAPI(
 # CORS — allow your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-       
-        "https://your-vercel-app.vercel.app",  # add later
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Include routes
 app.include_router(auth_routes.router)
 app.include_router(resume_routes.router)     # NEW
