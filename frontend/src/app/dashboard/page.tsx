@@ -33,46 +33,35 @@ export default function DashboardPage() {
     getPlan().then(setPlan).catch(() => { });
   };
 
-  useEffect(() => {
-    if ((session as any)?.accessToken) {
-      Cookies.set(
-        "access_token",
-        (session as any).accessToken,
-        {
-          secure: true,
-          sameSite: "strict",
-        }
-      );
-    }
-
-    if ((session as any)?.refreshToken) {
-      Cookies.set(
-        "refresh_token",
-        (session as any).refreshToken,
-        {
-          secure: true,
-          sameSite: "strict",
-        }
-      );
-    }
-  }, [session]);
+ 
 
   useEffect(() => {
-    if (!Cookies.get("access_token")) {
-      setLoading(false);
-      return;
+    if (status !== "authenticated") return;
+
+    const accessToken = (session as any)?.accessToken;
+    const refreshToken = (session as any)?.refreshToken;
+
+    if (!accessToken) return;
+
+    Cookies.set("access_token", accessToken, {
+      secure: true,
+      sameSite: "strict",
+    });
+
+    if (refreshToken) {
+      Cookies.set("refresh_token", refreshToken, {
+        secure: true,
+        sameSite: "strict",
+      });
     }
 
     getMe()
       .then((data) => setUser(data))
-      .catch((err) => {
-        console.log("getMe error:", err);
-        // window.location.href = "/login";  ❌ hata do
-      })
+      .catch(console.error)
       .finally(() => setLoading(false));
 
     refreshData();
-  }, [refreshKey, session]);
+  }, [status, session, refreshKey]);
 
   const handleUploadSuccess = (resume: ResumeUploadResponse) => {
     setLastUpload(resume);
