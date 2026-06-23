@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Record } from "@/types";
+
 
 interface SectionCardsProps {
   sections: Record<string, string>;

@@ -25,7 +25,7 @@ export default function ScoreTrendChart() {
   useEffect(() => {
     getScoreTrends()
       .then((data) => setTrends(data.trends))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -106,7 +106,7 @@ export default function ScoreTrendChart() {
             }}
             labelStyle={{ color: "#9ca3af" }}
             itemStyle={{ color: "#3b82f6" }}
-            formatter={(value: number) => [`${value}/100`, "Score"]}
+            formatter={(value) => [`${value ?? 0}/100`, "Score"]}
             labelFormatter={(label) => {
               const item = chartData.find((d) => d.shortDate === label);
               return item?.name || label;

@@ -5,7 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from "axios";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
           );
 
           const { access_token } = response.data;
-          user.accessToken = access_token;
+          (user as any).accessToken = access_token;
           return true;
         } catch (error) {
           console.error("OAuth backend error:", error);
@@ -72,8 +72,8 @@ export const authOptions: NextAuthOptions = {
 
     async jwt({ token, user, account }) {
       // Persist the access token in the JWT
-      if (user?.accessToken) {
-        token.accessToken = user.accessToken;
+      if ((user as any)?.accessToken) {
+        (token as any).accessToken = (user as any).accessToken;
       }
 
       // For Google OAuth, exchange on first sign in
@@ -89,7 +89,7 @@ export const authOptions: NextAuthOptions = {
             }
           );
           token.accessToken = response.data.access_token;
-        } catch {}
+        } catch { }
       }
 
       return token;
@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       // Pass the access token to the session
-      (session as any).accessToken = token.accessToken;
+      (session as any).accessToken = (token as any).accessToken;
       return session;
     },
   },
