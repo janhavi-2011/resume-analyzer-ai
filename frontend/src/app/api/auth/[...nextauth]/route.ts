@@ -48,7 +48,6 @@ const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
-          // Send Google user to our backend to create/login
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/oauth`,
             {
@@ -59,45 +58,34 @@ const authOptions: NextAuthOptions = {
             }
           );
 
-          const { access_token } = response.data;
+          const { access_token, refresh_token } = response.data;
+
           (user as any).accessToken = access_token;
+          (user as any).refreshToken = refresh_token;
+
           return true;
         } catch (error) {
           console.error("OAuth backend error:", error);
-          return true; // Still allow sign in, handle token separately
+          return false;
         }
       }
+
       return true;
     },
 
     async jwt({ token, user, account }) {
-      // Persist the access token in the JWT
-      if ((user as any)?.accessToken) {
-        (token as any).accessToken = (user as any).accessToken;
-      }
-
-      // For Google OAuth, exchange on first sign in
-      if (account?.provider === "google" && account?.access_token) {
-        try {
-          const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/oauth`,
-            {
-              email: token.email,
-              full_name: token.name,
-              provider: "google",
-              provider_id: account.providerAccountId,
-            }
-          );
-          token.accessToken = response.data.access_token;
-        } catch { }
+      if (user) {
+        token.accessToken = (user as any).accessToken;
+        token.refreshToken = (user as any).refreshToken;
       }
 
       return token;
     },
 
-    async session({ session, token }) {
-      // Pass the access token to the session
-      (session as any).accessToken = (token as any).accessToken;
+  async session({ session, token }) {
+      (session as any).accessToken = token.accessToken;
+      (session as any).refreshToken = token.refreshToken;
+
       return session;
     },
   },

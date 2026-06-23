@@ -35,20 +35,25 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if ((session as any)?.accessToken) {
-      const token = Cookies.get("access_token");
+      Cookies.set(
+        "access_token",
+        (session as any).accessToken,
+        {
+          secure: true,
+          sameSite: "strict",
+        }
+      );
+    }
 
-      if (!token) {
-        Cookies.set(
-          "access_token",
-          (session as any).accessToken,
-          {
-            secure: true,
-            sameSite: "strict",
-          }
-        );
-
-
-      }
+    if ((session as any)?.refreshToken) {
+      Cookies.set(
+        "refresh_token",
+        (session as any).refreshToken,
+        {
+          secure: true,
+          sameSite: "strict",
+        }
+      );
     }
   }, [session]);
 
