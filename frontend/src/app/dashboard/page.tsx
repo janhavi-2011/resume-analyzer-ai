@@ -17,7 +17,10 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  console.log("STATUS =", status);
+  console.log("SESSION =", session);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpload, setLastUpload] = useState<ResumeUploadResponse | null>(null);
@@ -50,13 +53,21 @@ export default function DashboardPage() {
   }, [session]);
 
   useEffect(() => {
+    if (!Cookies.get("access_token")) {
+      setLoading(false);
+      return;
+    }
+
     getMe()
       .then((data) => setUser(data))
-      .catch(() => { window.location.href = "/login"; })
+      .catch((err) => {
+        console.log("getMe error:", err);
+        // window.location.href = "/login";  ❌ hata do
+      })
       .finally(() => setLoading(false));
 
     refreshData();
-  }, [refreshKey]);
+  }, [refreshKey, session]);
 
   const handleUploadSuccess = (resume: ResumeUploadResponse) => {
     setLastUpload(resume);
