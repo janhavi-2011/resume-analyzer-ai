@@ -1,4 +1,5 @@
 # app/routes/auth.py
+from uuid import UUID
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -122,7 +123,7 @@ def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
             detail="Invalid refresh token",
         )
 
-    user = db.query(User).filter(User.id == decoded["sub"]).first()
+    user = db.query(User).filter(User.id == UUID(decoded["sub"])).first()
     if not user or user.refresh_token != payload.refresh_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
