@@ -44,7 +44,7 @@ export default function DashboardPage() {
           }
         );
 
-        window.location.reload();
+
       }
     }
   }, [session]);
