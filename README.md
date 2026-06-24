@@ -72,26 +72,33 @@ resume-analyzer-ai
 
 ## 📸 Screenshots
 
-### Home Page
+### 🔐 Login Page
+![Login Page](screenshots/login.png)
 
-![Home](screenshots/home.png)
+---
 
-### Dashboard
+### 🏠 Home Page
+![Home Page](screenshots/home.png)
 
-![Dashboard](screenshots/dashboard.png)
+---
 
-### Resume Upload
+### 📄 Resume Upload & Dashboard
+![Resume Dashboard](screenshots/resume.png)
 
-![Upload](screenshots/upload.png)
+---
 
-### AI Analysis
+### 🤖 AI Resume Analysis
+![AI Analysis](screenshots/analysis.png)
 
-![Analysis](screenshots/analysis.png)
+---
 
-### Score Trend Chart
+### 📈 Score Trend Chart
+![Score Trend Chart](screenshots/score%20chart.png)
 
-![Score chart](screenshots/score.png)
+---
 
+### 💎 Plan & Analytics
+![Plan Analytics](screenshots/plan.png)
 ---
 
 ## 🔑 Authentication Flow
